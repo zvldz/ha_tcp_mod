@@ -1,0 +1,6 @@
+{
+  "domain": "tcp_mod",
+  "name": "TCP_MOD",
+  "documentation": "https://github.com/zvldz/ha_tcp_mod",
+  "codeowners": []
+}
