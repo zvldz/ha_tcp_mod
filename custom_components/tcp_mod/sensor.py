@@ -121,7 +121,16 @@ class TcpModSensor(Entity):
                 return
 
             if self._config[CONF_PAYLOAD_TEMPLATE] is not None:
-                payload = self._config[CONF_PAYLOAD_TEMPLATE].render()
+                try:
+                    payload = self._config[CONF_PAYLOAD_TEMPLATE].render(parse_result=False)
+                except TemplateError:
+                    _LOGGER.error(
+                        "Unable to render template of %r with value: %r",
+                        self._config[CONF_PAYLOAD_TEMPLATE],
+                        value,
+                    )
+                    return
+
                 if self._config[CONF_SEND_EOL]:
                     payload = payload + "\n"
             else:
@@ -157,7 +166,9 @@ class TcpModSensor(Entity):
 
         if self._config[CONF_VALUE_TEMPLATE] is not None:
             try:
-                self._state = self._config[CONF_VALUE_TEMPLATE].render(value=value)
+                self._state = self._config[CONF_VALUE_TEMPLATE].render(
+                    parse_result=False, value=value
+                )
                 return
             except TemplateError:
                 _LOGGER.error(
